@@ -27,6 +27,7 @@ export default {
   created(){
      console.log(this.$route.name)
      this.routename=this.$route.name;
+     
   },
 	components: {
     Header,

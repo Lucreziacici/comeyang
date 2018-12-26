@@ -5,16 +5,18 @@
 </template>
 
 <script>
+
 export default {
-  name: 'App'
-}
+  name: "App",
+};
 </script>
 
 <style>
-#app{
-  background-color: #FFFFFF;
+#app {
+  background-color: #ffffff;
 }
-body,html{
+body,
+html {
   margin: 0;
 }
 </style>

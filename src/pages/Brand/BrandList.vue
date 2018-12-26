@@ -50,7 +50,7 @@ export default {
           if (res.data.res_status_code == "0") {
             this.brandList = res.data.res_content;
           } else {
-            this.$message(res.data.res_message);
+           this.$message({                 showClose: true,                 message: res.data.res_message,                 type: "error"               });
           }
         })
         .catch(err => {

@@ -51,7 +51,11 @@ export default {
     Menu
   },
   created() {},
-  methods: {}
+  methods: {
+    submitForm(){
+      console.log("提交")
+    }
+  }
 };
 </script>
 <style lang="less" >

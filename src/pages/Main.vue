@@ -100,7 +100,11 @@ export default {
           if (res.data.res_status_code == "0") {
             this.brandList = res.data.res_content;
           } else {
-            this.$message(res.data.res_message);
+            this.$message({
+              showClose: true,
+              message: res.data.res_message,
+              type: "error"
+            });
           }
         })
         .catch(err => {
@@ -116,7 +120,11 @@ export default {
           if (res.data.res_status_code == "0") {
             this.homePage = res.data.res_content;
           } else {
-            this.$message(res.data.res_message);
+            this.$message({
+              showClose: true,
+              message: res.data.res_message,
+              type: "error"
+            });
           }
         })
         .catch(err => {
@@ -139,7 +147,11 @@ export default {
               }
             }
           } else {
-            this.$message(res.data.res_message);
+            this.$message({
+              showClose: true,
+              message: res.data.res_message,
+              type: "error"
+            });
           }
         })
         .catch(err => {
@@ -156,7 +168,11 @@ export default {
             this.BigCategoryList[i].CategoryList = res.data.res_content;
             vm.$set(this.BigCategoryList,i,this.BigCategoryList[i])
           } else {
-            this.$message(res.data.res_message);
+           this.$message({
+              showClose: true,
+              message: res.data.res_message,
+              type: "error"
+            });
           }
         })
         .catch(err => {
@@ -180,7 +196,11 @@ export default {
             this.BigCategoryList[i].CommodityList = res.data.res_content.data_list;
             vm.$set(this.BigCategoryList,i,this.BigCategoryList[i])
           } else {
-            this.$message(res.data.res_message);
+            this.$message({
+              showClose: true,
+              message: res.data.res_message,
+              type: "error"
+            });
           }
         })
         .catch(err => {

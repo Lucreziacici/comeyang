@@ -5,8 +5,10 @@
       <el-col class="minwidth550" :xs="12" :sm="11" :md="9" :lg="7" :xl="6">
         <div class="pd0_10">
           <span class="font-size12 color333">洋来了购物欢迎你</span>
-          <router-link class="common_a font-size12 color333 pd0_10" :to="{name:'Login'}">登录</router-link>∣
-          <router-link class="common_a font-size12 color333 pd0_5" :to="{name:'Register'}">免费注册</router-link>
+          <router-link v-if="!token" class="common_a font-size12 color333 pd0_10" :to="{name:'Login'}">登录</router-link>∣
+          <router-link v-if="!token" class="common_a font-size12 color333 pd0_5" :to="{name:'Register'}">免费注册</router-link>
+          <span v-if="token" class="common_a font-size12 color333 pd0_5">欢迎！{{JSON.parse(user).nick_name}}</span>
+          <span v-if="token" class="common_a font-size12 color333 pd0_5" @click="logout">∣   退出</span>
         </div>
       </el-col>
       <el-col class="minwidth550" :xs="12" :sm="11" :md="9" :lg="7" :xl="6">
@@ -88,6 +90,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import * as types from "../vuex/mutation-types";
 export default {
   data() {
     return {
@@ -95,13 +99,19 @@ export default {
       routename: "",
       keyword: "",
       BigCategoryList: [],
-      isShow:false
+      isShow: false
     };
   },
   created() {
-    // console.log(this.$route.name);
     this.SearchWordList();
     this.GetBigCategoryList();
+  },
+  computed: {
+    ...mapState([
+      // 映射 this.count 为 store.state.count
+      "token",
+      "user"
+    ])
   },
   methods: {
     // 获取搜索关键词
@@ -114,7 +124,11 @@ export default {
           if (res.data.res_status_code == "0") {
             this.searchword = res.data.res_content;
           } else {
-            this.$message(res.data.res_message);
+            this.$message({
+              showClose: true,
+              message: res.data.res_message,
+              type: "error"
+            });
           }
         })
         .catch(err => {
@@ -145,13 +159,18 @@ export default {
               }
             }
           } else {
-            this.$message(res.data.res_message);
+            this.$message({
+              showClose: true,
+              message: res.data.res_message,
+              type: "error"
+            });
           }
         })
         .catch(err => {
           console.log(err);
         });
     },
+    //获取列表
     GetCategoryList(e, i) {
       this.$axios({
         method: "get",
@@ -162,26 +181,39 @@ export default {
             this.BigCategoryList[i].CategoryList = res.data.res_content;
             vm.$set(this.BigCategoryList, i, this.BigCategoryList[i]);
           } else {
-            this.$message(res.data.res_message);
+            this.$message({
+              showClose: true,
+              message: res.data.res_message,
+              type: "error"
+            });
           }
         })
         .catch(err => {
           console.log(err);
         });
     },
-    Showcommodity(){
-      console.log("移入")
-      this.isShow=true;
+    // 显示弹框
+    Showcommodity() {
+      console.log("移入");
+      this.isShow = true;
     },
-    leave(){
-      this.isShow=false;
+    // 隐藏弹框
+    leave() {
+      this.isShow = false;
+    },
+    //登出
+    logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      this.$store.commit(types.LOGOUT);
+      location.reload();
     }
   },
   watch: {
     $route(to, from) {
       console.log(this.$route.name);
       this.routename = this.$route.name;
-      this.isShow=false;
+      this.isShow = false;
     }
   },
   beforeUpdate: function() {
@@ -231,8 +263,8 @@ export default {
   background: #f43594;
 }
 .floatbox {
-    width: 60%;
-    z-index: 100;
+  width: 60%;
+  z-index: 100;
 }
 </style>
 

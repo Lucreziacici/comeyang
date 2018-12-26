@@ -248,7 +248,7 @@ export default {
               }
             }
           } else {
-            this.$message(res.data.res_message);
+           this.$message({                 showClose: true,                 message: res.data.res_message,                 type: "error"               });
           }
         })
         .catch(err => {
@@ -297,7 +297,7 @@ export default {
               });
               this.GetShopGoodsDetail();
             } else {
-              this.$message(res.data.res_message);
+             this.$message({                 showClose: true,                 message: res.data.res_message,                 type: "error"               });
             }
           })
           .catch(err => {
@@ -321,7 +321,7 @@ export default {
               });
               this.GetShopGoodsDetail();
             } else {
-              this.$message(res.data.res_message);
+             this.$message({                 showClose: true,                 message: res.data.res_message,                 type: "error"               });
             }
           })
           .catch(err => {
@@ -356,7 +356,7 @@ export default {
                 type: "success"
               });
             } else {
-              this.$message(res.data.res_message);
+             this.$message({                 showClose: true,                 message: res.data.res_message,                 type: "error"               });
             }
           })
           .catch(err => {
@@ -390,7 +390,7 @@ export default {
                 query: { orderid: res.data.res_content.order.order_no }
               });
             } else {
-              this.$message(res.data.res_message);
+             this.$message({                 showClose: true,                 message: res.data.res_message,                 type: "error"               });
             }
           })
           .catch(err => {
@@ -415,7 +415,7 @@ export default {
           if (res.data.res_status_code == "0") {
             this.Commodityranklist = res.data.res_content.data_list;
           } else {
-            this.$message(res.data.res_message);
+           this.$message({                 showClose: true,                 message: res.data.res_message,                 type: "error"               });
           }
         })
         .catch(err => {

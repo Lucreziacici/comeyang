@@ -10,16 +10,20 @@
 
             </el-col>
             <el-col :span="16">&nbsp;
-              <el-input class="mg5_0" placeholder="用户名"></el-input>
-              <el-input class="mg5_0" type="password" placeholder="设置密码"></el-input>
-              <el-input class="mg5_0" placeholder="手机号"></el-input>
-              <el-col :span="14">
-                <el-input class="mg5_0" placeholder="验证码"></el-input>
+              <el-input class="mg5_0" placeholder="用户名" v-model="nick_name"></el-input>
+              <el-input class="mg5_0" type="password" placeholder="设置密码"  v-model="password"></el-input>
+              <el-input class="mg5_0" placeholder="手机号"  v-model="phone"></el-input>
+              <div class="flex_between_center">
+              <el-col :span="12">
+                <el-input class="mg5_0" placeholder="验证码"  v-model="verify_code"></el-input>
               </el-col>
-              <el-col :span="10">
-                <button class="mg5_0 button">获取验证码</button>
+              <el-col :span="12" >
+                <button class=" button" v-if="reflesh"  @click="Getverify()" >获取验证码</button>
+                 <button class=" button" v-if="time">{{time}}s后重新获取</button>
               </el-col>
-              <el-button class="common_button mg5_0" style="width:100%">注册</el-button>
+              </div>
+              
+              <el-button class="common_button mg5_0" style="width:100%" @click="Register()">注册</el-button>
               <p class="font-size12 common_a" @click="Login()">已有账号，前往登陆~</p>
             </el-col>
             <el-col :span="4">&nbsp;
@@ -35,14 +39,129 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import * as types from "../../vuex/mutation-types";
 export default {
   data() {
-    return {};
+    return {
+      nick_name: "",
+      password: "",
+      phone: "",
+      verify_code: "",
+      time: "",
+      reflesh: true
+    };
   },
   created() {},
+  computed: mapState([
+    // 映射 this.count 为 store.state.count
+    "token"
+  ]),
   methods: {
-    Login(){
-      this.$router.push({name:'Login'})
+    Login() {
+      this.$router.push({ name: "Login" });
+    },
+    Register() {
+      if (!this.nick_name) {
+        this.$message("请填写用户名");
+        return false;
+      }
+      if (!this.password) {
+        this.$message("请填写密码");
+        return false;
+      }
+      if (!this.phone) {
+        this.$message("请填写手机号");
+        return false;
+      }
+      if (!/^1[34578]\d{9}$/.test(this.phone)) {
+        this.$message("手机号格式有误");
+        return false;
+      }
+      if (!this.verify_code) {
+        this.$message("请填写验证码");
+        return false;
+      }
+      this.$axios({
+        method: "post",
+        url: "ComeYangHome/Register",
+        data: {
+          nick_name: this.nick_name,
+          password: this.password,
+          phone: this.phone,
+          verify_code: this.verify_code
+        }
+      })
+        .then(res => {
+          if (res.data.res_status_code == "0") {
+            this.$message("注册成功");
+            localStorage.setItem(
+              "token",
+              JSON.stringify(res.data.res_content.open_id)
+            );
+            localStorage.setItem("user", JSON.stringify(res.data.res_content));
+            this.$store.commit(types.LOGIN, res.data.res_content.open_id);
+            this.$store.commit(
+              types.USER,
+              JSON.stringify(res.data.res_content)
+            );
+            this.$router.push("/");
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.data.res_message,
+              type: "error"
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    Getverify() {
+      if (!this.phone) {
+        this.$message("请填写手机号");
+      } else if (!/^1[34578]\d{9}$/.test(this.phone)) {
+        this.$message("手机号格式有误");
+      } else {
+        this.$axios({
+          method: "get",
+          url: "ComeYangHome/GetVerifyCode",
+          params: {
+            phone: this.phone
+          }
+        })
+          .then(res => {
+            if (res.data.res_status_code == "0") {
+              console.log(res.data.res_content);
+              this.time = "10";
+              this.reflesh = false;
+              this.countDown();
+            } else {
+              this.$message({
+                showClose: true,
+                message: res.data.res_message,
+                type: "error"
+              });
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    },
+    /**倒计时**/
+    countDown() {
+      let interval = window.setInterval(() => {
+        if (this.time == 1) {
+          this.reflesh = true;
+        }
+        if (this.time-- <= 0) {
+          this.time = "";
+          this.isGetCode = false;
+          window.clearInterval(interval);
+        }
+      }, 1000);
     }
   }
 };
@@ -79,14 +198,14 @@ html {
 }
 .logobg {
   // height: 280px;
-  width: 330px;
+  width: 350px;
   border-radius: 20px;
 }
 .button {
   background: white;
   color: #333;
   border: 1px solid #dcdfe6;
-  padding:0 11px;
+  padding: 0 11px;
   height: 40px;
   line-height: 40px;
   border-radius: 4px;

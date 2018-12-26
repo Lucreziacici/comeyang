@@ -15,11 +15,11 @@
             <div class="user_list pd10_20">
               <div class="user_item pd20_0">
                   <span class="bold ">用户名：</span>
-                  <span>嘭嘭嘭</span>
+                  <span>{{JSON.parse(user).nick_name}}</span>
               </div>
                <div class="user_item pd20_0">
                   <span class="bold ">手机号：</span>
-                  <span>13764991646</span>
+                  <span>{{JSON.parse(user).phone}}</span>
                   <el-button type="mini" class="mg0_10" @click="toChange()">修改</el-button>
               </div>
 
@@ -36,6 +36,8 @@
 
 <script>
 import Menu from "../../components/Menu";
+import { mapState } from "vuex";
+import * as types from "../../vuex/mutation-types";
 export default {
   data() {
     return {
@@ -47,21 +49,24 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapState(["token", "user"])
+  },
   components: {
     Menu
   },
   created() {},
   methods: {
-    toChange(){
+    toChange() {
       this.$router.push({
-        name:'ChangePhone'
-      })
+        name: "ChangePhone"
+      });
     }
   }
 };
 </script>
 <style lang="less" >
-.user_item{
+.user_item {
   border-bottom: 1px solid #f2f2f2;
 }
 </style>

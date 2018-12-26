@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import axios from './script/axios'
 import router from './router'
+import store from './vuex/store'
 import VueWechatTitle from 'vue-wechat-title';  
 // import VueAreaLinkage from 'vue-area-linkage';
 
@@ -23,6 +24,7 @@ Vue.prototype.$axios = axios;
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

@@ -15,16 +15,16 @@
             <div class="user_list pd30_0">
               <el-form :model="formLabelAlign" status-icon  ref="formLabelAlign" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="用户名" prop="pass">
-                  <el-input type="phone" :disabled="true" v-model="formLabelAlign.phone" autocomplete="off"></el-input>
+                  <el-input type="phone" :disabled="true" v-model="JSON.parse(user).nick_name" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="原始密码" prop="checkPass">
-                  <el-input type="password" v-model="formLabelAlign.password" autocomplete="off"></el-input>
+                  <el-input type="password" v-model="oldpassword" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="新密码" prop="checkPass">
-                  <el-input type="password" v-model="formLabelAlign.password" autocomplete="off"></el-input>
+                  <el-input type="password" v-model="newpassword" autocomplete="off"></el-input>
                 </el-form-item>
                  <el-form-item label="重复新密码" prop="checkPass">
-                  <el-input type="password" v-model="formLabelAlign.password" autocomplete="off"></el-input>
+                  <el-input type="password" v-model="renewpassword" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" class="common_button" @click="submitForm()">提交</el-button>
@@ -43,16 +43,21 @@
 
 <script>
 import Menu from "../../components/Menu";
+import { mapState } from "vuex";
+import * as types from "../../vuex/mutation-types";
 export default {
   data() {
     return {
       labelPosition: "right",
-      formLabelAlign: {
-        phone: "",
-        password: "",
-      }
+      oldpassword:"",
+      newpassword:"",
+      renewpassword:""
     };
   },
+  computed: mapState([
+    // 映射 this.count 为 store.state.count
+    "token","user"
+  ]),
   components: {
     Menu
   },

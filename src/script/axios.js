@@ -7,7 +7,8 @@ import Vue from 'vue'
 
 //测试
 axios.defaults.baseURL = 'https://mallt.shjinjia.com.cn/api/' //测试用
-//指向文慧地址
+//指向文慧地址http://10.10.200.2/miniapi/api/
+// axios.defaults.baseURL = 'http://10.10.200.1/miniapi/api/' //测试用
 // axios.defaults.baseURL = 'http://10.10.200.4/MiniProgramMall.Api/api/' //测试用
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
@@ -23,7 +24,7 @@ axios.interceptors.request.use(
     config => { // 这里的config包含每次请求的内容
         // console.log(config)
         config.headers.shop_id='5';
-        config.headers.open_id='osCIE0dcoxQDjsKy3G1jmLP0i6Ls';
+        // config.headers.open_id='osCIE0dcoxQDjsKy3G1jmLP0i6Ls';
         let url;
         if (config.url.indexOf("?") < 0) {
             url = config.url.substring(axios.defaults.baseURL.length);
@@ -31,11 +32,11 @@ axios.interceptors.request.use(
             url = config.url.substring(axios.defaults.baseURL.length, config.url.indexOf("?"));
         }
         // 需要带上token
-        // if (urlsWithoutToken.indexOf(url) < 0 && localStorage.getItem("token")) {
-        //     config.headers.Authorization = `${localStorage.getItem("token")}`;
-        // } else {
-        //     delete config.headers.Authorization;
-        // }
+        if (urlsWithoutToken.indexOf(url) < 0 && localStorage.getItem("token")) {
+            config.headers.open_id = `${localStorage.getItem("token")}`;
+        } else {
+            delete config.headers.Authorization;
+        }
         return config;
     },
     err => {
@@ -52,14 +53,14 @@ axios.interceptors.response.use(
         console.log(err)
             //Do something with response error
         if (err.response.data.status == '401') {
-            // window.localStorage.removeItem("token");
-            // window.localStorage.removeItem("userId");
-            // window.localStorage.removeItem("name");
-            // window.localStorage.removeItem("role");
-            // router.push("/");
+            window.localStorage.removeItem("token");
+            window.localStorage.removeItem("userId");
+            window.localStorage.removeItem("name");
+            window.localStorage.removeItem("role");
+            router.push("/Login");
 
         } else if (err.response.data.status == '403') {
-            // window.vm.$message("您没有权限进行此操作");
+            window.vm.$message("您没有权限进行此操作");
         }
 
 

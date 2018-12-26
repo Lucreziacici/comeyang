@@ -154,7 +154,7 @@ export default {
             this.checkAllStatus = true;
             this.GetMyCartTotalPrice();
           } else {
-            this.$message(res.data.res_message);
+           this.$message({                 showClose: true,                 message: res.data.res_message,                 type: "error"               });
           }
         })
         .catch(err => {
@@ -175,7 +175,7 @@ export default {
             console.log(res.data.res_content);
             this.total_price = res.data.res_content.total_price;
           } else {
-            this.$message(res.data.res_message);
+           this.$message({                 showClose: true,                 message: res.data.res_message,                 type: "error"               });
           }
         })
         .catch(err => {
@@ -225,7 +225,7 @@ export default {
                   message: "删除成功!"
                 });
               } else {
-                this.$message(res.data.res_message);
+               this.$message({                 showClose: true,                 message: res.data.res_message,                 type: "error"               });
               }
             })
             .catch(err => {
@@ -272,7 +272,7 @@ export default {
             this.carts = res.data.res_content.cart_list;
             this.GetMyCartTotalPrice();
           } else {
-            this.$message(res.data.res_message);
+           this.$message({                 showClose: true,                 message: res.data.res_message,                 type: "error"               });
           }
         })
         .catch(err => {
