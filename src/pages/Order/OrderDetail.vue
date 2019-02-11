@@ -18,7 +18,7 @@
               <div class="font-size14">{{order.city}} &nbsp;&nbsp;{{order.province}}&nbsp;&nbsp;{{order.district}}&nbsp;&nbsp;{{order.address}}</div>
 
             </div>
-            <div  v-if="order.real_name" class="order_message s pd20">
+            <div v-if="order.real_name" class="order_message s pd20">
               <div class="title bold">身份信息：</div>
               <div class="font-size14 mg10_0 flex_between_center">
                 <p>
@@ -96,8 +96,15 @@ export default {
     OrderCommodity
   },
   created() {
-    this.getOrderDetail();
-    this.getIDCardList();
+    if (this.$route.query.out_trade_no) {
+      this.$router.push({
+        path: "/OrderDetail",
+        query: { order_no: this.$route.query.out_trade_no }
+      });
+    } else {
+      this.getOrderDetail();
+      this.getIDCardList();
+    }
   },
   methods: {
     // 获取订单详情
@@ -146,7 +153,7 @@ export default {
           console.log(err);
         });
     },
-      // 更新身份证
+    // 更新身份证
     chooseIdcard(e) {
       this.order.id_card = e.id_card;
       this.order.real_name = e.real_name;
@@ -359,6 +366,12 @@ export default {
             message: "已取消操作"
           });
         });
+    }
+  },
+  watch: {
+    $route(to, from) {
+      this.order_no=this.$route.query.order_no
+      this.getOrderDetail();
     }
   }
 };

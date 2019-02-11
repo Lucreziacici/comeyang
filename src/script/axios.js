@@ -7,6 +7,9 @@ import Vue from 'vue'
 
 //测试
 axios.defaults.baseURL = 'https://mallt.shjinjia.com.cn/api/' //测试用
+
+
+// axios.defaults.baseURL = 'http://10.10.200.6/MiniProgramMall.Api/api/' //测试用
 //指向文慧地址http://10.10.200.2/miniapi/api/
 // axios.defaults.baseURL = 'http://10.10.200.1/miniapi/api/' //测试用
 // axios.defaults.baseURL = 'http://10.10.200.4/MiniProgramMall.Api/api/' //测试用

@@ -147,7 +147,7 @@
     <el-dialog title="选择地址" :visible.sync="dialogVisible" width="60%">
       <div style="height: 500px; overflow-y: auto;border:1px solid #eee">
         <el-row>
-          <router-link class="common_a commoncolor common_button left mg10 addbutton"  :to='{path:"/EditAddress",query:{type:type}}'>新增地址</router-link>
+          <router-link class="common_a commoncolor common_button left mg10 addbutton" :to='{path:"/EditAddress",query:{type:type}}'>新增地址</router-link>
         </el-row>
         <el-col class="address_item_box relative" :span="8" v-for="(item,index) in addresslist" :key="index">
           <div class="address_item_bg flex_column  mg10  pd10" :class="{'address_item_active_bg':item.id==order.address_id}" @click="chooseAddress(item)">
@@ -209,6 +209,7 @@
         <el-button @click="dialogidpaytype = false">取 消</el-button>
       </span>
     </el-dialog>
+    <div v-html="payhtml"></div>
   </div>
 </template>
 
@@ -242,7 +243,8 @@ export default {
           icon: "el-icon-comeyang-yinlianzhifu"
         }
       ],
-      paytype: "0" //0为支付宝支付，1为微信支付，2为银联支付
+      paytype: "0", //0为支付宝支付，1为微信支付，2为银联支付,
+      payhtml: ""
     };
   },
   created() {
@@ -381,24 +383,40 @@ export default {
       this.dialogidpaytype = false;
     },
     // 支付
-    pay(){
-      if(this.paytype=='0'){
-         this.$notify({
-          title: '支付宝支付',
-          message:'支付宝支付'
-        });
-      }else if(this.paytype=='1'){
+    pay() {
+      if (this.paytype == "0") {
+        // this.$notify({
+        //   title: "支付宝支付",
+        //   message: "支付宝支付"
+        // });
+        this.$axios({
+          method: "get",
+          url: "ComeYangOrderPay/AliOrderPay?",
+          params: {
+            trade_no: this.orderid
+          }
+        })
+          .then(res => {
+            console.log(res.data);
+            // this.payhtml=res.data;
+            const div = document.createElement("div");
+            div.innerHTML = res.data; //此处form就是后台返回接收到的数据
+            document.body.appendChild(div);
+            document.forms[0].submit();
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else if (this.paytype == "1") {
         this.$notify({
-          title: '微信支付',
-          message: '微信支付'
+          title: "微信支付",
+          message: "微信支付"
         });
-
-      }else if(this.paytype=='2'){
+      } else if (this.paytype == "2") {
         this.$notify({
-          title: '银联支付',
-          message: '银联支付'
+          title: "银联支付",
+          message: "银联支付"
         });
-
       }
     }
   }
